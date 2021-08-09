@@ -81,3 +81,119 @@ const menu = [
     desc: `Red bean paste dessert, serving with honey.`,
   },
 ];
+
+getCategoryButtons(menu);
+displayMenuItems(menu, "All");
+
+function findCategories(menu){
+    let categories = [];
+    categories.push("All")
+
+    let otherCategories = new Set(menu.map((menuCat) => menuCat.category))
+    categories.push(...otherCategories)
+    return categories;
+}
+
+function getCategoryButtons(menu){
+    let buttonContainer = document.querySelector('.btn-container');
+    const categories = findCategories(menu);
+
+    categories.forEach((category) => {
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.classList.add("btn-outline-dark");
+        button.classList.add("btn-item");
+        button.textContent = category;
+
+        var att = document.createAttribute("data-id");
+        att.value = category;
+        button.setAttributeNode(att);
+
+        buttonContainer.appendChild(button);
+    });
+
+}
+
+function displayMenuItems(menu, filterId){
+    const menucontainer = document.querySelector('.section-center');
+
+    if(filterId == "All"){
+      menucontainer.innerHTML = "";
+      const menuItems = createMenuItems(menu);
+      menuItems.forEach((menuItem) => {
+          menucontainer.appendChild(menuItem);
+      });
+    }
+    else{
+      menucontainer.innerHTML = "";
+      const filteredMenu = menu.filter(item => item.category == filterId);
+      const filteredMenuItems = createMenuItems(filteredMenu);
+      filteredMenuItems.forEach((filteredItem) => {
+        menucontainer.appendChild(filteredItem);
+      });
+    }
+}
+
+
+function createMenuItems(menu){
+    const menuItem = menu.map((item) => {
+        const menuItemDiv = document.createElement('div');
+        const menuItemImage = document.createElement('img');
+        const menuItemInfo = document.createElement('div');
+        const menuItemTitle = document.createElement('div');
+        const menuItemText = document.createElement('div');
+        const menuItemName = document.createElement('h4');
+        const menuItemPrice = document.createElement('h4');
+
+        menuItemDiv.classList.add('menu-items');
+        menuItemDiv.classList.add('col-lg-6');
+        menuItemDiv.classList.add('col-sm-12');
+
+        menuItemDiv.appendChild(menuItemImage);
+        menuItemDiv.appendChild(menuItemInfo);
+        menuItemInfo.appendChild(menuItemTitle);
+        menuItemInfo.appendChild(menuItemText);
+        menuItemTitle.appendChild(menuItemName);
+        menuItemTitle.appendChild(menuItemPrice);
+
+        // info
+        menuItemInfo.classList.add('menu-info');
+
+        // img
+        menuItemImage.src = item.img;
+        menuItemImage.alt = item.title;
+        menuItemImage.classList.add('photo');
+
+        // title
+        menuItemTitle.classList.add('menu-title');
+        menuItemName.textContent = item.title;
+        menuItemPrice.classList.add('price');
+        menuItemPrice.textContent = item.price;
+
+        // description
+        menuItemText.classList.add('menu-text');
+        menuItemText.textContent = item.desc;
+
+        return menuItemDiv;
+        return menuItemImage;
+        return menuItemInfo;
+        return menuItemTitle;
+        return menuItemText;
+        return menuItemName;
+        return menuItemPrice;
+    });
+
+    return menuItem;
+}
+
+
+
+const menuButton = document.querySelectorAll('button');
+
+menuButton.forEach((buttonItem) => {
+  buttonItem.addEventListener("click", function () {
+      const buttonId = buttonItem.getAttribute("data-id");
+      displayMenuItems(menu, buttonId);
+  });
+});
+
